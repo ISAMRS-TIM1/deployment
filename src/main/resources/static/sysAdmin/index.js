@@ -190,6 +190,7 @@ function setUpTables(){
 
 
 	$('#airlinesTable tbody').on('click', 'tr', function() {
+		if(this.textContent === "No data available in table") return;
 		airlinesTable.$('tr.selected').removeClass('selected');
 		$(this).addClass('selected');
 		currentService = airlinesTable.row(this).data()[0];
@@ -199,6 +200,7 @@ function setUpTables(){
 	});
 
 	$('#hotelsTable tbody').on('click', 'tr', function() {
+		if(this.textContent === "No data available in table") return;
 		hotelsTable.$('tr.selected').removeClass('selected');
 		$(this).addClass('selected');
 		currentService = hotelsTable.row(this).data()[0];
@@ -208,6 +210,7 @@ function setUpTables(){
 	});
 
 	$('#rentACarsTable tbody').on('click', 'tr', function() {
+		if(this.textContent === "No data available in table") return;
 		rentACarsTable.$('tr.selected').removeClass('selected');
 		$(this).addClass('selected');
 		currentService = rentACarsTable.row(this).data()[0];
@@ -223,10 +226,39 @@ function setUpEditForm() {
 			function(e) {
 				e.preventDefault();
 				let firstName = $('input[name="fname"]').val();
+				
+				if(firstName == null || firstName === ""){
+					toastr["error"]("First name must not be empty");
+					return;
+				}
+				
 				let lastName = $('input[name="lname"]').val();
+				
+				if(lastName == null || lastName === ""){
+					toastr["error"]("Last name must not be empty");
+					return;
+				}
+				
 				let phone = $('input[name="phone"]').val();
+				
+				if(phone == null || phone === ""){
+					toastr["error"]("Phone must not be empty");
+					return;
+				}
+				
 				let address = $('input[name="address"]').val();
+				
+				if(address == null || address === ""){
+					toastr["error"]("Address must not be empty");
+					return;
+				}
+				
 				let email = $('#email').text();
+
+				if(email == null || email === ""){
+					toastr["error"]("Email must not be empty");
+					return;
+				}
 
 				$.ajax({
 					type : 'PUT',
