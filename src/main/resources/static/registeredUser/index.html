@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flights</title>
+<link rel="shortcut icon" type="image/png"
+	href="common/images/favicon.png" />
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+	crossorigin=""></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css"
+	href="common/css/jquery.seat-charts.css">
+<link rel="stylesheet" href="common/css/tableStyle.css">
+<link rel="stylesheet" href="common/css/button.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css" />
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="auth/auth.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+<script type="text/javascript"
+	src="//cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js">
+	
+</script>
+<!-- Koristi stomp biblioteku da se pretplati na brokerov /topic/message endpoint -->
+<script type="text/javascript"
+	src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="common/js/jquery.seat-charts.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css"
+	type="text/css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/css/bootstrap-datepicker.css" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="registeredUser/index.css">
+<script type="text/javascript" src="registeredUser/index.js"></script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div id="topMenu">
+			<div id="tabsDiv">
+				<ul class="nav nav-tabs nav-justified">
+					<li class="active"><a data-toggle="tab" href="#flights">Flights</a>
+					</li>
+					<li><a data-toggle="tab" href="#hotels">Hotels</a></li>
+					<li><a data-toggle="tab" href="#cars">Cars</a></li>
+					<li><a data-toggle="tab" href="#friends">Friends</a></li>
+					<li><a data-toggle="tab" href="#reservations">My
+							Reservations</a></li>
+					<li><a data-toggle="tab" href="#profile">Profile</a></li>
+					<li><a data-toggle="tab" id="logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+			<div id="flights" class="tab-pane fade in active"
+				style="text-align: center;">
+				<div id="flightsTableWrapper">
+					<div id="searchFlightsDiv">
+						<div id="airlinesDiv">
+							<table id="airlinesTable" class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Name of airline</th>
+										<th>Average grade</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<table id="serviceTable">
+							<tr>
+								<td>Start destination</td>
+								<td><select class="form-control" id="startDestination">
+								</select></td>
+								<td>End destination</td>
+								<td><select class="form-control" id="endDestination">
+								</select></td>
+							</tr>
+							<tr>
+								<td>Departure time</td>
+								<td><input type="date" id="departureTime" class="form-control" /></td>
+								<td>Multi city</td>
+								<td><input type="checkbox" id="multicity"/></td>
+							</tr>
+							<tr>
+								<td>Round trip</td>
+								<td><input type="checkbox" id="srcRoundTrip" /></td>
+								<td class="retTripSrc">Returning departure time</td>
+								<td class="retTripSrc"><input class="form-control" type="date"
+									id="srcRetDepTime" /></td>
+							</tr>
+						</table>
+						<br>
+						<button class="btn btn-default" id="searchFlights"
+							onclick="searchFlights(event)">Search</button>
+						<br>
+						<div id="flightsDiv">
+							<table id="flightsTable" class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Flight code</th>
+										<th>Departure time</th>
+										<th>Landing time</th>
+										<th>Airline</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="hotels" class="tab-pane fade">
+				<div id="hotelsTableWrapper">
+					<div id="searchHotelsDiv">
+						<form id="searchHotelsForm">
+							<table id="hotelsSearchTable">
+								<tr>
+									<td><label>Hotel name</label></td><td><input class="form-control" id="searchHotelName"
+										type="text"></td>
+									<td><select id="searchHotelCountry" class="form-control"
+										required>
+											<option value="" disabled selected hidden>Hotel
+												country</option>
+											<option value="Afghanistan">Afghanistan</option>
+											<option value="Åland Islands">Åland Islands</option>
+											<option value="Albania">Albania</option>
+											<option value="Algeria">Algeria</option>
+											<option value="American Samoa">American Samoa</option>
+											<option value="Andorra">Andorra</option>
+											<option value="Angola">Angola</option>
+											<option value="Anguilla">Anguilla</option>
+											<option value="Antarctica">Antarctica</option>
+											<option value="Antigua and Barbuda">Antigua and
+												Barbuda</option>
+											<option value="Argentina">Argentina</option>
+											<option value="Armenia">Armenia</option>
+											<option value="Aruba">Aruba</option>
+											<option value="Australia">Australia</option>
+											<option value="Austria">Austria</option>
+											<option value="Azerbaijan">Azerbaijan</option>
+											<option value="Bahamas">Bahamas</option>
+											<option value="Bahrain">Bahrain</option>
+											<option value="Bangladesh">Bangladesh</option>
+											<option value="Barbados">Barbados</option>
+											<option value="Belarus">Belarus</option>
+											<option value="Belgium">Belgium</option>
+											<option value="Belize">Belize</option>
+											<option value="Benin">Benin</option>
+											<option value="Bermuda">Bermuda</option>
+											<option value="Bhutan">Bhutan</option>
+											<option value="Bolivia">Bolivia</option>
+											<option value="Bosnia and Herzegovina">Bosnia and
+												Herzegovina</option>
+											<option value="Botswana">Botswana</option>
+											<option value="Bouvet Island">Bouvet Island</option>
+											<option value="Brazil">Brazil</option>
+											<option value="British Indian Ocean Territory">British
+												Indian Ocean Territory</option>
+											<option value="Brunei Darussalam">Brunei Darussalam</option>
+											<option value="Bulgaria">Bulgaria</option>
+											<option value="Burkina Faso">Burkina Faso</option>
+											<option value="Burundi">Burundi</option>
+											<option value="Cambodia">Cambodia</option>
+											<option value="Cameroon">Cameroon</option>
+											<option value="Canada">Canada</option>
+											<option value="Cape Verde">Cape Verde</option>
+											<option value="Cayman Islands">Cayman Islands</option>
+											<option value="Central African Republic">Central
+												African Republic</option>
+											<option value="Chad">Chad</option>
+											<option value="Chile">Chile</option>
+											<option value="China">China</option>
+											<option value="Christmas Island">Christmas Island</option>
+											<option value="Cocos (Keeling) Islands">Cocos
+												(Keeling) Islands</option>
+											<option value="Colombia">Colombia</option>
+											<option value="Comoros">Comoros</option>
+											<option value="Congo">Congo</option>
+											<option value="Congo, The Democratic Republic of The">Congo,
+												The Democratic Republic of The</option>
+											<option value="Cook Islands">Cook Islands</option>
+											<option value="Costa Rica">Costa Rica</option>
+											<option value="Cote D'ivoire">Cote D'ivoire</option>
+											<option value="Croatia">Croatia</option>
+											<option value="Cuba">Cuba</option>
+											<option value="Cyprus">Cyprus</option>
+											<option value="Czech Republic">Czech Republic</option>
+											<option value="Denmark">Denmark</option>
+											<option value="Djibouti">Djibouti</option>
+											<option value="Dominica">Dominica</option>
+											<option value="Dominican Republic">Dominican
+												Republic</option>
+											<option value="Ecuador">Ecuador</option>
+											<option value="Egypt">Egypt</option>
+											<option value="El Salvador">El Salvador</option>
+											<option value="Equatorial Guinea">Equatorial Guinea</option>
+											<option value="Eritrea">Eritrea</option>
+											<option value="Estonia">Estonia</option>
+											<option value="Ethiopia">Ethiopia</option>
+											<option value="Falkland Islands (Malvinas)">Falkland
+												Islands (Malvinas)</option>
+											<option value="Faroe Islands">Faroe Islands</option>
+											<option value="Fiji">Fiji</option>
+											<option value="Finland">Finland</option>
+											<option value="France">France</option>
+											<option value="French Guiana">French Guiana</option>
+											<option value="French Polynesia">French Polynesia</option>
+											<option value="French Southern Territories">French
+												Southern Territories</option>
+											<option value="Gabon">Gabon</option>
+											<option value="Gambia">Gambia</option>
+											<option value="Georgia">Georgia</option>
+											<option value="Germany">Germany</option>
+											<option value="Ghana">Ghana</option>
+											<option value="Gibraltar">Gibraltar</option>
+											<option value="Greece">Greece</option>
+											<option value="Greenland">Greenland</option>
+											<option value="Grenada">Grenada</option>
+											<option value="Guadeloupe">Guadeloupe</option>
+											<option value="Guam">Guam</option>
+											<option value="Guatemala">Guatemala</option>
+											<option value="Guernsey">Guernsey</option>
+											<option value="Guinea">Guinea</option>
+											<option value="Guinea-bissau">Guinea-bissau</option>
+											<option value="Guyana">Guyana</option>
+											<option value="Haiti">Haiti</option>
+											<option value="Heard Island and Mcdonald Islands">Heard
+												Island and Mcdonald Islands</option>
+											<option value="Holy See (Vatican City State)">Holy
+												See (Vatican City State)</option>
+											<option value="Honduras">Honduras</option>
+											<option value="Hong Kong">Hong Kong</option>
+											<option value="Hungary">Hungary</option>
+											<option value="Iceland">Iceland</option>
+											<option value="India">India</option>
+											<option value="Indonesia">Indonesia</option>
+											<option value="Iran, Islamic Republic of">Iran,
+												Islamic Republic of</option>
+											<option value="Iraq">Iraq</option>
+											<option value="Ireland">Ireland</option>
+											<option value="Isle of Man">Isle of Man</option>
+											<option value="Israel">Israel</option>
+											<option value="Italy">Italy</option>
+											<option value="Jamaica">Jamaica</option>
+											<option value="Japan">Japan</option>
+											<option value="Jersey">Jersey</option>
+											<option value="Jordan">Jordan</option>
+											<option value="Kazakhstan">Kazakhstan</option>
+											<option value="Kenya">Kenya</option>
+											<option value="Kiribati">Kiribati</option>
+											<option value="Korea, Democratic People's Republic of">Korea,
+												Democratic People's Republic of</option>
+											<option value="Korea, Republic of">Korea, Republic
+												of</option>
+											<option value="Kuwait">Kuwait</option>
+											<option value="Kyrgyzstan">Kyrgyzstan</option>
+											<option value="Lao People's Democratic Republic">Lao
+												People's Democratic Republic</option>
+											<option value="Latvia">Latvia</option>
+											<option value="Lebanon">Lebanon</option>
+											<option value="Lesotho">Lesotho</option>
+											<option value="Liberia">Liberia</option>
+											<option value="Libyan Arab Jamahiriya">Libyan Arab
+												Jamahiriya</option>
+											<option value="Liechtenstein">Liechtenstein</option>
+											<option value="Lithuania">Lithuania</option>
+											<option value="Luxembourg">Luxembourg</option>
+											<option value="Macao">Macao</option>
+											<option value="Macedonia, The Former Yugoslav Republic of">Macedonia,
+												The Former Yugoslav Republic of</option>
+											<option value="Madagascar">Madagascar</option>
+											<option value="Malawi">Malawi</option>
+											<option value="Malaysia">Malaysia</option>
+											<option value="Maldives">Maldives</option>
+											<option value="Mali">Mali</option>
+											<option value="Malta">Malta</option>
+											<option value="Marshall Islands">Marshall Islands</option>
+											<option value="Martinique">Martinique</option>
+											<option value="Mauritania">Mauritania</option>
+											<option value="Mauritius">Mauritius</option>
+											<option value="Mayotte">Mayotte</option>
+											<option value="Mexico">Mexico</option>
+											<option value="Micronesia, Federated States of">Micronesia,
+												Federated States of</option>
+											<option value="Moldova, Republic of">Moldova,
+												Republic of</option>
+											<option value="Monaco">Monaco</option>
+											<option value="Mongolia">Mongolia</option>
+											<option value="Montenegro">Montenegro</option>
+											<option value="Montserrat">Montserrat</option>
+											<option value="Morocco">Morocco</option>
+											<option value="Mozambique">Mozambique</option>
+											<option value="Myanmar">Myanmar</option>
+											<option value="Namibia">Namibia</option>
+											<option value="Nauru">Nauru</option>
+											<option value="Nepal">Nepal</option>
+											<option value="Netherlands">Netherlands</option>
+											<option value="Netherlands Antilles">Netherlands
+												Antilles</option>
+											<option value="New Caledonia">New Caledonia</option>
+											<option value="New Zealand">New Zealand</option>
+											<option value="Nicaragua">Nicaragua</option>
+											<option value="Niger">Niger</option>
+											<option value="Nigeria">Nigeria</option>
+											<option value="Niue">Niue</option>
+											<option value="Norfolk Island">Norfolk Island</option>
+											<option value="Northern Mariana Islands">Northern
+												Mariana Islands</option>
+											<option value="Norway">Norway</option>
+											<option value="Oman">Oman</option>
+											<option value="Pakistan">Pakistan</option>
+											<option value="Palau">Palau</option>
+											<option value="Palestinian Territory, Occupied">Palestinian
+												Territory, Occupied</option>
+											<option value="Panama">Panama</option>
+											<option value="Papua New Guinea">Papua New Guinea</option>
+											<option value="Paraguay">Paraguay</option>
+											<option value="Peru">Peru</option>
+											<option value="Philippines">Philippines</option>
+											<option value="Pitcairn">Pitcairn</option>
+											<option value="Poland">Poland</option>
+											<option value="Portugal">Portugal</option>
+											<option value="Puerto Rico">Puerto Rico</option>
+											<option value="Qatar">Qatar</option>
+											<option value="Reunion">Reunion</option>
+											<option value="Romania">Romania</option>
+											<option value="Russian Federation">Russian
+												Federation</option>
+											<option value="Rwanda">Rwanda</option>
+											<option value="Saint Helena">Saint Helena</option>
+											<option value="Saint Kitts and Nevis">Saint Kitts
+												and Nevis</option>
+											<option value="Saint Lucia">Saint Lucia</option>
+											<option value="Saint Pierre and Miquelon">Saint
+												Pierre and Miquelon</option>
+											<option value="Saint Vincent and The Grenadines">Saint
+												Vincent and The Grenadines</option>
+											<option value="Samoa">Samoa</option>
+											<option value="San Marino">San Marino</option>
+											<option value="Sao Tome and Principe">Sao Tome and
+												Principe</option>
+											<option value="Saudi Arabia">Saudi Arabia</option>
+											<option value="Senegal">Senegal</option>
+											<option value="Serbia">Serbia</option>
+											<option value="Seychelles">Seychelles</option>
+											<option value="Sierra Leone">Sierra Leone</option>
+											<option value="Singapore">Singapore</option>
+											<option value="Slovakia">Slovakia</option>
+											<option value="Slovenia">Slovenia</option>
+											<option value="Solomon Islands">Solomon Islands</option>
+											<option value="Somalia">Somalia</option>
+											<option value="South Africa">South Africa</option>
+											<option value="South Georgia and The South Sandwich Islands">South
+												Georgia and The South Sandwich Islands</option>
+											<option value="Spain">Spain</option>
+											<option value="Sri Lanka">Sri Lanka</option>
+											<option value="Sudan">Sudan</option>
+											<option value="Suriname">Suriname</option>
+											<option value="Svalbard and Jan Mayen">Svalbard and
+												Jan Mayen</option>
+											<option value="Swaziland">Swaziland</option>
+											<option value="Sweden">Sweden</option>
+											<option value="Switzerland">Switzerland</option>
+											<option value="Syrian Arab Republic">Syrian Arab
+												Republic</option>
+											<option value="Taiwan, Province of China">Taiwan,
+												Province of China</option>
+											<option value="Tajikistan">Tajikistan</option>
+											<option value="Tanzania, United Republic of">Tanzania,
+												United Republic of</option>
+											<option value="Thailand">Thailand</option>
+											<option value="Timor-leste">Timor-leste</option>
+											<option value="Togo">Togo</option>
+											<option value="Tokelau">Tokelau</option>
+											<option value="Tonga">Tonga</option>
+											<option value="Trinidad and Tobago">Trinidad and
+												Tobago</option>
+											<option value="Tunisia">Tunisia</option>
+											<option value="Turkey">Turkey</option>
+											<option value="Turkmenistan">Turkmenistan</option>
+											<option value="Turks and Caicos Islands">Turks and
+												Caicos Islands</option>
+											<option value="Tuvalu">Tuvalu</option>
+											<option value="Uganda">Uganda</option>
+											<option value="Ukraine">Ukraine</option>
+											<option value="United Arab Emirates">United Arab
+												Emirates</option>
+											<option value="United Kingdom">United Kingdom</option>
+											<option value="United States">United States</option>
+											<option value="United States Minor Outlying Islands">United
+												States Minor Outlying Islands</option>
+											<option value="Uruguay">Uruguay</option>
+											<option value="Uzbekistan">Uzbekistan</option>
+											<option value="Vanuatu">Vanuatu</option>
+											<option value="Venezuela">Venezuela</option>
+											<option value="Viet Nam">Viet Nam</option>
+											<option value="Virgin Islands, British">Virgin
+												Islands, British</option>
+											<option value="Virgin Islands, U.S.">Virgin Islands,
+												U.S.</option>
+											<option value="Wallis and Futuna">Wallis and Futuna</option>
+											<option value="Western Sahara">Western Sahara</option>
+											<option value="Yemen">Yemen</option>
+											<option value="Zambia">Zambia</option>
+											<option value="Zimbabwe">Zimbabwe</option>
+									</select></td>
+
+								</tr>
+								<tr>
+									<td><label>Hotel grade</label></td>
+									<td><input
+										id="searchHotelGrade" type="text" class="span2" value=""
+										data-slider-min="0" data-slider-max="5" data-slider-step="0.1"
+										data-slider-value="[0,5]" /></td>
+
+
+								</tr>
+							</table>
+							<br>
+							<button class="btn btn-default" id="searchHotelsButton"
+								type="submit">Search</button>
+							<br>
+						</form>
+						<div id="hotelsTableWrapper">
+							<table id="hotelsTable" class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Grade</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="cars" class="tab-pane fade">
+				<div id="searchCarsDiv">
+					<div id="searchCars">
+						<form id="searchVehiclesForm">
+							<table id="searchCarsTable">
+								<thead></thead>
+								<tbody>
+									<tr>
+										<td colspan="2"><select class="form-control"
+											id="selectProducer"></select></td>
+										<td><select id="selectModel" disabled multiple></select></td>
+										<td><select id="vehicleType" multiple></select></td>
+										<td><select id="fuelType" multiple></select></td>
+									</tr>
+									<tr>
+										<td><label class="searchLabel">Maximum price per
+												day:</label></td>
+										<td><input type="number" class="form-control"
+											id="priceTo" min="0"></td>
+										<td><label class="searchLabel">Minimal number of
+												seats:</label></td>
+										<td><input type="number" class="form-control"
+											id="numberOfSeats" min="1"></td>
+									</tr>
+									<tr>
+										<td><label class="searchLabel">Production year
+												from:</label></td>
+										<td><input type="text" class="form-control"
+											id="startYear"></td>
+										<td><label class="searchLabel">To:</label></td>
+										<td><input type="text" class="form-control" id="endYear">
+										</td>
+									</tr>
+									<tr>
+										<td><label class="searchLabel">Grade:</label></td>
+										<td><input id="vehicleGrade" type="text" value=""
+											data-slider-min="0" data-slider-max="5"
+											data-slider-step="0.1" data-slider-value="[0,5]"></td>
+										<td><select id="vehicleCountry" class="form-control"
+											required>
+												<option value="" disabled selected hidden>Hotel
+													country</option>
+												<option value="Afghanistan">Afghanistan</option>
+												<option value="Åland Islands">Åland Islands</option>
+												<option value="Albania">Albania</option>
+												<option value="Algeria">Algeria</option>
+												<option value="American Samoa">American Samoa</option>
+												<option value="Andorra">Andorra</option>
+												<option value="Angola">Angola</option>
+												<option value="Anguilla">Anguilla</option>
+												<option value="Antarctica">Antarctica</option>
+												<option value="Antigua and Barbuda">Antigua and
+													Barbuda</option>
+												<option value="Argentina">Argentina</option>
+												<option value="Armenia">Armenia</option>
+												<option value="Aruba">Aruba</option>
+												<option value="Australia">Australia</option>
+												<option value="Austria">Austria</option>
+												<option value="Azerbaijan">Azerbaijan</option>
+												<option value="Bahamas">Bahamas</option>
+												<option value="Bahrain">Bahrain</option>
+												<option value="Bangladesh">Bangladesh</option>
+												<option value="Barbados">Barbados</option>
+												<option value="Belarus">Belarus</option>
+												<option value="Belgium">Belgium</option>
+												<option value="Belize">Belize</option>
+												<option value="Benin">Benin</option>
+												<option value="Bermuda">Bermuda</option>
+												<option value="Bhutan">Bhutan</option>
+												<option value="Bolivia">Bolivia</option>
+												<option value="Bosnia and Herzegovina">Bosnia and
+													Herzegovina</option>
+												<option value="Botswana">Botswana</option>
+												<option value="Bouvet Island">Bouvet Island</option>
+												<option value="Brazil">Brazil</option>
+												<option value="British Indian Ocean Territory">British
+													Indian Ocean Territory</option>
+												<option value="Brunei Darussalam">Brunei Darussalam</option>
+												<option value="Bulgaria">Bulgaria</option>
+												<option value="Burkina Faso">Burkina Faso</option>
+												<option value="Burundi">Burundi</option>
+												<option value="Cambodia">Cambodia</option>
+												<option value="Cameroon">Cameroon</option>
+												<option value="Canada">Canada</option>
+												<option value="Cape Verde">Cape Verde</option>
+												<option value="Cayman Islands">Cayman Islands</option>
+												<option value="Central African Republic">Central
+													African Republic</option>
+												<option value="Chad">Chad</option>
+												<option value="Chile">Chile</option>
+												<option value="China">China</option>
+												<option value="Christmas Island">Christmas Island</option>
+												<option value="Cocos (Keeling) Islands">Cocos
+													(Keeling) Islands</option>
+												<option value="Colombia">Colombia</option>
+												<option value="Comoros">Comoros</option>
+												<option value="Congo">Congo</option>
+												<option value="Congo, The Democratic Republic of The">Congo,
+													The Democratic Republic of The</option>
+												<option value="Cook Islands">Cook Islands</option>
+												<option value="Costa Rica">Costa Rica</option>
+												<option value="Cote D'ivoire">Cote D'ivoire</option>
+												<option value="Croatia">Croatia</option>
+												<option value="Cuba">Cuba</option>
+												<option value="Cyprus">Cyprus</option>
+												<option value="Czech Republic">Czech Republic</option>
+												<option value="Denmark">Denmark</option>
+												<option value="Djibouti">Djibouti</option>
+												<option value="Dominica">Dominica</option>
+												<option value="Dominican Republic">Dominican
+													Republic</option>
+												<option value="Ecuador">Ecuador</option>
+												<option value="Egypt">Egypt</option>
+												<option value="El Salvador">El Salvador</option>
+												<option value="Equatorial Guinea">Equatorial Guinea</option>
+												<option value="Eritrea">Eritrea</option>
+												<option value="Estonia">Estonia</option>
+												<option value="Ethiopia">Ethiopia</option>
+												<option value="Falkland Islands (Malvinas)">Falkland
+													Islands (Malvinas)</option>
+												<option value="Faroe Islands">Faroe Islands</option>
+												<option value="Fiji">Fiji</option>
+												<option value="Finland">Finland</option>
+												<option value="France">France</option>
+												<option value="French Guiana">French Guiana</option>
+												<option value="French Polynesia">French Polynesia</option>
+												<option value="French Southern Territories">French
+													Southern Territories</option>
+												<option value="Gabon">Gabon</option>
+												<option value="Gambia">Gambia</option>
+												<option value="Georgia">Georgia</option>
+												<option value="Germany">Germany</option>
+												<option value="Ghana">Ghana</option>
+												<option value="Gibraltar">Gibraltar</option>
+												<option value="Greece">Greece</option>
+												<option value="Greenland">Greenland</option>
+												<option value="Grenada">Grenada</option>
+												<option value="Guadeloupe">Guadeloupe</option>
+												<option value="Guam">Guam</option>
+												<option value="Guatemala">Guatemala</option>
+												<option value="Guernsey">Guernsey</option>
+												<option value="Guinea">Guinea</option>
+												<option value="Guinea-bissau">Guinea-bissau</option>
+												<option value="Guyana">Guyana</option>
+												<option value="Haiti">Haiti</option>
+												<option value="Heard Island and Mcdonald Islands">Heard
+													Island and Mcdonald Islands</option>
+												<option value="Holy See (Vatican City State)">Holy
+													See (Vatican City State)</option>
+												<option value="Honduras">Honduras</option>
+												<option value="Hong Kong">Hong Kong</option>
+												<option value="Hungary">Hungary</option>
+												<option value="Iceland">Iceland</option>
+												<option value="India">India</option>
+												<option value="Indonesia">Indonesia</option>
+												<option value="Iran, Islamic Republic of">Iran,
+													Islamic Republic of</option>
+												<option value="Iraq">Iraq</option>
+												<option value="Ireland">Ireland</option>
+												<option value="Isle of Man">Isle of Man</option>
+												<option value="Israel">Israel</option>
+												<option value="Italy">Italy</option>
+												<option value="Jamaica">Jamaica</option>
+												<option value="Japan">Japan</option>
+												<option value="Jersey">Jersey</option>
+												<option value="Jordan">Jordan</option>
+												<option value="Kazakhstan">Kazakhstan</option>
+												<option value="Kenya">Kenya</option>
+												<option value="Kiribati">Kiribati</option>
+												<option value="Korea, Democratic People's Republic of">Korea,
+													Democratic People's Republic of</option>
+												<option value="Korea, Republic of">Korea, Republic
+													of</option>
+												<option value="Kuwait">Kuwait</option>
+												<option value="Kyrgyzstan">Kyrgyzstan</option>
+												<option value="Lao People's Democratic Republic">Lao
+													People's Democratic Republic</option>
+												<option value="Latvia">Latvia</option>
+												<option value="Lebanon">Lebanon</option>
+												<option value="Lesotho">Lesotho</option>
+												<option value="Liberia">Liberia</option>
+												<option value="Libyan Arab Jamahiriya">Libyan Arab
+													Jamahiriya</option>
+												<option value="Liechtenstein">Liechtenstein</option>
+												<option value="Lithuania">Lithuania</option>
+												<option value="Luxembourg">Luxembourg</option>
+												<option value="Macao">Macao</option>
+												<option value="Macedonia, The Former Yugoslav Republic of">Macedonia,
+													The Former Yugoslav Republic of</option>
+												<option value="Madagascar">Madagascar</option>
+												<option value="Malawi">Malawi</option>
+												<option value="Malaysia">Malaysia</option>
+												<option value="Maldives">Maldives</option>
+												<option value="Mali">Mali</option>
+												<option value="Malta">Malta</option>
+												<option value="Marshall Islands">Marshall Islands</option>
+												<option value="Martinique">Martinique</option>
+												<option value="Mauritania">Mauritania</option>
+												<option value="Mauritius">Mauritius</option>
+												<option value="Mayotte">Mayotte</option>
+												<option value="Mexico">Mexico</option>
+												<option value="Micronesia, Federated States of">Micronesia,
+													Federated States of</option>
+												<option value="Moldova, Republic of">Moldova,
+													Republic of</option>
+												<option value="Monaco">Monaco</option>
+												<option value="Mongolia">Mongolia</option>
+												<option value="Montenegro">Montenegro</option>
+												<option value="Montserrat">Montserrat</option>
+												<option value="Morocco">Morocco</option>
+												<option value="Mozambique">Mozambique</option>
+												<option value="Myanmar">Myanmar</option>
+												<option value="Namibia">Namibia</option>
+												<option value="Nauru">Nauru</option>
+												<option value="Nepal">Nepal</option>
+												<option value="Netherlands">Netherlands</option>
+												<option value="Netherlands Antilles">Netherlands
+													Antilles</option>
+												<option value="New Caledonia">New Caledonia</option>
+												<option value="New Zealand">New Zealand</option>
+												<option value="Nicaragua">Nicaragua</option>
+												<option value="Niger">Niger</option>
+												<option value="Nigeria">Nigeria</option>
+												<option value="Niue">Niue</option>
+												<option value="Norfolk Island">Norfolk Island</option>
+												<option value="Northern Mariana Islands">Northern
+													Mariana Islands</option>
+												<option value="Norway">Norway</option>
+												<option value="Oman">Oman</option>
+												<option value="Pakistan">Pakistan</option>
+												<option value="Palau">Palau</option>
+												<option value="Palestinian Territory, Occupied">Palestinian
+													Territory, Occupied</option>
+												<option value="Panama">Panama</option>
+												<option value="Papua New Guinea">Papua New Guinea</option>
+												<option value="Paraguay">Paraguay</option>
+												<option value="Peru">Peru</option>
+												<option value="Philippines">Philippines</option>
+												<option value="Pitcairn">Pitcairn</option>
+												<option value="Poland">Poland</option>
+												<option value="Portugal">Portugal</option>
+												<option value="Puerto Rico">Puerto Rico</option>
+												<option value="Qatar">Qatar</option>
+												<option value="Reunion">Reunion</option>
+												<option value="Romania">Romania</option>
+												<option value="Russian Federation">Russian
+													Federation</option>
+												<option value="Rwanda">Rwanda</option>
+												<option value="Saint Helena">Saint Helena</option>
+												<option value="Saint Kitts and Nevis">Saint Kitts
+													and Nevis</option>
+												<option value="Saint Lucia">Saint Lucia</option>
+												<option value="Saint Pierre and Miquelon">Saint
+													Pierre and Miquelon</option>
+												<option value="Saint Vincent and The Grenadines">Saint
+													Vincent and The Grenadines</option>
+												<option value="Samoa">Samoa</option>
+												<option value="San Marino">San Marino</option>
+												<option value="Sao Tome and Principe">Sao Tome and
+													Principe</option>
+												<option value="Saudi Arabia">Saudi Arabia</option>
+												<option value="Senegal">Senegal</option>
+												<option value="Serbia">Serbia</option>
+												<option value="Seychelles">Seychelles</option>
+												<option value="Sierra Leone">Sierra Leone</option>
+												<option value="Singapore">Singapore</option>
+												<option value="Slovakia">Slovakia</option>
+												<option value="Slovenia">Slovenia</option>
+												<option value="Solomon Islands">Solomon Islands</option>
+												<option value="Somalia">Somalia</option>
+												<option value="South Africa">South Africa</option>
+												<option value="South Georgia and The South Sandwich Islands">South
+													Georgia and The South Sandwich Islands</option>
+												<option value="Spain">Spain</option>
+												<option value="Sri Lanka">Sri Lanka</option>
+												<option value="Sudan">Sudan</option>
+												<option value="Suriname">Suriname</option>
+												<option value="Svalbard and Jan Mayen">Svalbard and
+													Jan Mayen</option>
+												<option value="Swaziland">Swaziland</option>
+												<option value="Sweden">Sweden</option>
+												<option value="Switzerland">Switzerland</option>
+												<option value="Syrian Arab Republic">Syrian Arab
+													Republic</option>
+												<option value="Taiwan, Province of China">Taiwan,
+													Province of China</option>
+												<option value="Tajikistan">Tajikistan</option>
+												<option value="Tanzania, United Republic of">Tanzania,
+													United Republic of</option>
+												<option value="Thailand">Thailand</option>
+												<option value="Timor-leste">Timor-leste</option>
+												<option value="Togo">Togo</option>
+												<option value="Tokelau">Tokelau</option>
+												<option value="Tonga">Tonga</option>
+												<option value="Trinidad and Tobago">Trinidad and
+													Tobago</option>
+												<option value="Tunisia">Tunisia</option>
+												<option value="Turkey">Turkey</option>
+												<option value="Turkmenistan">Turkmenistan</option>
+												<option value="Turks and Caicos Islands">Turks and
+													Caicos Islands</option>
+												<option value="Tuvalu">Tuvalu</option>
+												<option value="Uganda">Uganda</option>
+												<option value="Ukraine">Ukraine</option>
+												<option value="United Arab Emirates">United Arab
+													Emirates</option>
+												<option value="United Kingdom">United Kingdom</option>
+												<option value="United States">United States</option>
+												<option value="United States Minor Outlying Islands">United
+													States Minor Outlying Islands</option>
+												<option value="Uruguay">Uruguay</option>
+												<option value="Uzbekistan">Uzbekistan</option>
+												<option value="Vanuatu">Vanuatu</option>
+												<option value="Venezuela">Venezuela</option>
+												<option value="Viet Nam">Viet Nam</option>
+												<option value="Virgin Islands, British">Virgin
+													Islands, British</option>
+												<option value="Virgin Islands, U.S.">Virgin
+													Islands, U.S.</option>
+												<option value="Wallis and Futuna">Wallis and Futuna</option>
+												<option value="Western Sahara">Western Sahara</option>
+												<option value="Yemen">Yemen</option>
+												<option value="Zambia">Zambia</option>
+												<option value="Zimbabwe">Zimbabwe</option>
+										</select></td>
+										<td>
+											<button class="btn btn-default" type="submit">Search</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</div>
+					<div id="vehiclesTableWrapper">
+						<table id="vehiclesTable" class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Producer</th>
+									<th>Model</th>
+									<th>Vehicle type</th>
+									<th>Fuel type</th>
+									<th>Number of seats</th>
+									<th>Price per day</th>
+									<th>Year of production</th>
+									<th>Average grade</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="friends" class="tab-pane fade">
+				<div id="friendsTableWrapper">
+					<div id="friendsTableDiv">
+						<table id="friendsTable" class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Email</th>
+									<th>First name</th>
+									<th>Last name</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+						<button class="btn btn-default" id="searchUsersButton"
+							data-toggle="modal" data-target="#usersModalDialog">Search
+							users</button>
+					</div>
+				</div>
+			</div>
+			<div id="reservations" class="tab-pane fade">
+				<div id="reservationsTableWrapper">
+					<div id="reservationsTableDiv">
+						<table id="reservationsTable" class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Reservation ID</th>
+									<th>Flight</th>
+									<th>Date</th>
+									<th>Price</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="profile" class="tab-pane fade">
+				<div id="profileContent">
+					<div id="userImgDiv">
+						<img src="common/images/user.png" id="userImg">
+					</div>
+					<div id="profileEdit">
+						<h2 id='email'></h2>
+						<form id="userEditForm">
+							<div class="form-group">
+								<label for="fname">First name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="fname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="lname">Last name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="lname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="phone">Phone:</label>
+								<div class="input-group">
+									<input class="form-control" type="tel" name="phone"
+										pattern="\+[0-9]{12}" title="12 digits starting with +">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="address">Address:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="address"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<button type="submit" class="btn btn-default" id="saveChanges">Save
+								changes</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="reservationCart">
+			<table id="cartTable">
+				<tr>
+					<td><img src="common/images/airplane.png" width="50%" /></td>
+					<td colspan="2" id="flightRes">No flight reserved</td>
+				</tr>
+				<tr>
+					<td><img src="common/images/hotel.png" width="50%" /></td>
+					<td colspan="2" id="hotelRes"></td>
+				</tr>
+				<tr>
+					<td><img src="common/images/car.png" width="50%" /></td>
+					<td colspan="2" id="carRes"></td>
+				</tr>
+				<tr>
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td colspan="3" style="text-align: center;"><button
+							class="btn btn-default" id="reserveButton"
+							title="Opens cart window where reservations can be confirmed"
+							onclick="continueReservation(event)">Open Cart</button></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- MODAL -->
+	<div class="modal fade" id="usersModalDialog" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="serviceDiv">
+				<form id="searchUserForm">
+					First name <input type="text" id="userFirstName" class="form-control"/> Last name <input
+						type="text" class="form-control" id="userLastName" /><br><input type="submit"
+						id="submitButton" class="btn btn-default" value="Search" />
+				</form>
+				<br>
+				<div id="usersDiv">
+					<table id="usersTable" class="table display table-bordered">
+						<thead>
+							<tr>
+								<th>Email</th>
+								<th>First name</th>
+								<th>Last name</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- SHOW HOTEL MODAL -->
+	<div class="modal fade" id="showHotelModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content" id="showHotelDiv">
+				<table id="showHotelTable">
+					<tr>
+						<td colspan="2"><input type="text" id="hotelName"
+							class="textInput" readonly></td>
+					</tr>
+					<tr>
+						<td colspan="2">Average grade:
+							<span id="hotelGrade"></span>
+						</td>
+					</tr>
+					<tr>
+						<td><textarea rows="8" cols="20" id="hotelDescription"
+								class="textInput" readonly></textarea></td>
+						<td><div id="hotelMapDiv"></div></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="quickHotelReservationsTable"
+								class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Reservation ID</th>
+										<th>Discounted price</th>
+										<th>Discount</th>
+										<th>From</th>
+										<th>To</th>
+										<th>Room</th>
+										<th>Additional services</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"><table id="additionalServicesTable"
+								class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Additional service</th>
+										<th>Price</th>
+										<th>Add to reservation</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="hotelRoomsSearchTable">
+								<tr>
+									<td>Reservation date</td>
+									<td><input type="text" id="searchRoomsDateRange" /></td>
+									<td>For people</td>
+									<td><input id="searchRoomsForPeople" type="number" min="1"
+										oninput="validity.valid||(value='');" value="1"></td>
+								</tr>
+								<tr>
+									<td>Price</td>
+									<td><input id="searchRoomsPrice" type="text" class="span2"
+										value="" data-slider-min="0" data-slider-max="10000"
+										data-slider-step="10" data-slider-value="[0,10000]" /></td>
+									<td>Grade</td>
+									<td><input id="searchRoomsGrade" type="text" class="span2"
+										value="" data-slider-min="0" data-slider-max="5"
+										data-slider-step="0.1" data-slider-value="[0,5]" /></td>
+								</tr>
+							</table> <br>
+							<button class="btn btn-default" id="searchRoomsButton"
+								onclick="searchRooms(event)">Search</button> <br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="roomsTable" class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Room</th>
+										<th>Current price</th>
+										<th>For people</th>
+										<th>Average grade</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- SHOW AIRLINE MODAL -->
+	<div class="modal fade" id="showAirlineModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content" id="showAirlineDiv">
+				<table id="showAirlineTable">
+					<tr>
+						<td colspan="2"><input type="text" id="airlineName"
+							class="textInput" readonly></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="color:black;">
+							<div id="airlineGrade"></div>
+						</td>
+					</tr>
+					<tr>
+						<td><textarea rows="8" cols="20" id="airlineDescription"
+								class="textInput" readonly></textarea></td>
+						<td><div id="airlineMapDiv"></div></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="airlineDestinationsTable"
+									class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th class="airDestLoc">Longitude</th>
+										<th class="airDestLoc">Latitude</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+					<tr><td colspan="2"><div id="destinationsMapDiv"></div><td></tr>
+					<tr>
+						<td colspan="2">
+							<table id="quickAirlineReservationsTable"
+								class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Reservation ID</th>
+										<th>Fligt code</th>
+										<th>Discounted price</th>
+										<th>Discount</th>
+										<th>Flight</th>
+										<th>Departure time</th>
+										<th>Landing time</th>
+										<th>Seat</th>
+										<th>Seat class</th>
+										<th>Returning dep time</th>
+										<th>Returning land time</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- SHOW FLIGHT MODAL -->
+	<div class="modal fade" id="showFlightModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="showFlightDiv">
+				<div id="reserveDiv">
+					<table id="showFlightTable">
+						<tr>
+							<td>Start destination</td>
+							<td><span id="startDest"></span></td>
+							<td>End destination</td>
+							<td><span id="endDest"></span></td>
+						</tr>
+						<tr>
+							<td>Departure time</td>
+							<td><span id="depTime"></span></td>
+							<td>Landing time</td>
+							<td><span id="landTime"></span></td>
+						</tr>
+						<tr>
+							<td>Airline</td>
+							<td><span id="flightAirline"></span></td>
+							<td>Flight duration</td>
+							<td><span id="flightDuration"></span></td>
+						</tr>
+						<tr>
+							<td>Flight distance</td>
+							<td><span id="flightDistance"></span></td>
+							<td>Locations of connections</td>
+							<td><select class="form-control" id="flightConnections"></select>
+						</tr>
+						<tr class="retTrip">
+							<td>Returning departure time</td>
+							<td><span id="retDepartureTime"></span></td>
+							<td>Returning landing time</td>
+							<td><span id="retLandingTime"></span></td>
+						</tr>
+						<tr>
+							<td>Price per bag</td>
+							<td><span id="pricePerBag"></span></td>
+							<td>Average grade</td>
+							<td><span id="averageGrade"></span>
+						</tr>
+						<tr>
+							<td>Passport number</td>
+							<td><input type='text' class="form-control" id="userPassNumber" /></td>
+							<td>Number of bags</td>
+							<td><input type='number' class="form-control" id="numOfBags" /></td>
+						</tr>
+					</table>
+					<br> <br>
+					<div id="planeSeats">
+						<div id="seat-map">
+							<div class="front-indicator">Front</div>
+						</div>
+						<div class="booking-details">
+							<h2>Booking Details</h2>
+							<h3>
+								Selected Seats (<span id="counter">0</span>):
+							</h3>
+							<ul id="selected-seats">
+							</ul>
+							Total: <b>$<span id="total">0</span></b>
+							<div id="legend"></div>
+						</div>
+					</div>
+					<br> <br>
+					<button class="btn btn-default" id="nextButtonFlights"
+						onclick="showFriendsStep(event)">Next</button>
+				</div>
+				<div id="reserveDivFriends">
+					<table id="inviteFriendsTable" class="table display table-bordered">
+						<thead>
+							<tr>
+								<th>Email</th>
+								<th>First name</th>
+								<th>Last name</th>
+								<th>Invite</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<br> <br>
+					<button class="btn btn-default" id="nextButtonFlightsFriends"
+						onclick="showLastStep(event)">Next</button>
+				</div>
+				<div id="reserveDivPassengers">
+					<table id="passengersTable">
+					</table>
+					<br> <br>
+					<button class="btn btn-default" id="nextButtonFlightsLast"
+						onclick="endReservation(event)">End reservation</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- QUICK VEHICLE RESERVATIONS MODAL -->
+	<div id="quickVehicleReservationsModal" class="modal fade"
+		role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 style="font-size:4.5vw !important;" id="quickReservationsModalTitle" class="modal-title"></h4>
+				</div>
+				<div class="modal-body">
+					<table id="reserveCarsTable">
+						<thead></thead>
+						<tbody>
+							<tr>
+								<td><select class="form-control" id="vehicleBranchOffices"></select>
+								</td>
+								<td><label class="searchLabel">From:</label></td>
+								<td><input type="text" class="form-control"
+									id="vrstartDate"></td>
+								<td><label class="searchLabel">To:</label></td>
+								<td><input type="text" class="form-control" id="vrendDate">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<button class="btn btn-default" id="rvButton">Reserve</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="quickReservationsTable"
+						class="table display table-bordered">
+						<thead>
+							<tr>
+								<th>Reservation ID</th>
+								<th>Branch office name</th>
+								<th>Vehicle producer</th>
+								<th>Vehicle model</th>
+								<th>From</th>
+								<th>To</th>
+								<th>Discount</th>
+								<th>Discounted price</th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- PASSPORT/BAGS MODAL -->
+	<div id="passportBagsModal" class="modal fade" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-body">
+					<table id="passportBagsTable">
+						<thead></thead>
+						<tbody>
+							<tr>
+								<td><label class="searchLabel">Passport number </label></td>
+								<td><input type="text" class="form-control" id="modalPass">
+								</td>
+								<td><label class="searchLabel">Number of bags </label></td>
+								<td><input type="number" min="0" class="form-control"
+									id="modalBags"></td>
+							</tr>
+							<tr>
+								<td colspan="4">
+									<button class="btn btn-default" id="passBagsButton"
+										onclick="getPassportAndBags(event)">Confirm</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- RESERVATION DETAILS MODAL -->
+	<div class="modal fade" id="showReservationModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="showReservationDiv">
+				<div id="reserveDiv">
+					<h2 style="color: black; text-align: center;">Flight
+						reservation</h2>
+					<table id="showReservationTable">
+						<tr>
+							<td>Start destination</td>
+							<td><span id="startDestRes"></span></td>
+							<td>End destination</td>
+							<td><span id="endDestRes"></span></td>
+						</tr>
+						<tr>
+							<td>Departure time</td>
+							<td><span id="depTimeRes"></span></td>
+							<td>Landing time</td>
+							<td><span id="landTimeRes"></span></td>
+						</tr>
+						<tr>
+							<td>Airline</td>
+							<td><p class="service" id="flightAirlineRes"></p></td>
+							<td id="airlineRating"></td>
+							<td>Flight duration</td>
+							<td><span id="flightDurationRes"></span></td>
+						</tr>
+						<tr>
+							<td>Flight distance</td>
+							<td><span id="flightDistanceRes"></span></td>
+							<td>Locations of connections</td>
+							<td><select class="form-control" id="flightConnectionsRes"></select></td>
+						</tr>
+						<tr class="resRoundTrip">
+							<td>Returning departure time</td>
+							<td><span id="resRetDepTime"></span></td>
+							<td>Returning landing time</td>
+							<td><span id="resRetLandTime"></span></td>
+						</tr>
+						<tr>
+							<td>Number of seats</td>
+							<td><span id="numOfSeatsRes"></span></td>
+							<td>Seats</td>
+							<td><select class="form-control" id="seatsRes"></select></td>
+						</tr>
+						<tr>
+							<td>Price</td>
+							<td><input type="number" class="form-control" id="flightPriceRes" readonly></td>
+							<td><input type="hidden" id="flightResID"></td>
+							<td id="flightRating"></td>
+							<td><button id="cancelFlightReservationButton"
+									class="btn btn-default">Cancel</button></td>
+						</tr>
+					</table>
+					<br> <br>
+					<h2 id="hotelResHeader" style="color: black; text-align: center;">Hotel
+						reservation</h2>
+					<table id="showHotelReservationTable">
+						<tr>
+							<td>From date</td>
+							<td><span id="fromDateRes"></span></td>
+							<td>To date</td>
+							<td><span id="toDateRes"></span></td>
+						</tr>
+						<tr>
+							<td>Room number</td>
+							<td><span id="roomNumberRes"></span></td>
+							<td>Hotel</td>
+							<td><p class="service" id="hotelResId"></p></td>
+							<td id="hotelRating"></td>
+						</tr>
+						<tr>
+							<td>Additional services</td>
+							<td><select class="form-control" id="addServRes"></select></td>
+						</tr>
+						<tr>
+							<td>Price</td>
+							<td><input type="number" class="form-control" id="hotelPriceRes" readonly></td>
+							<td><input type="hidden" class="form-control" id="roomResID"></td>
+							<td id="roomRating"></td>
+							<td colspan='2'><button id="cancelHotelReservationButton"
+									class="btn btn-default">Cancel</button></td>
+						</tr>
+					</table>
+					<br> <br>
+					<h2 id="carResHeader" style="color: black; text-align: center;">Car
+						reservation</h2>
+					<table id="showCarReservationTable">
+						<tr>
+							<td>From date</td>
+							<td><span id="fromDateCarRes"></span></td>
+							<td>To date</td>
+							<td><span id="toDateCarRes"></span></td>
+						</tr>
+						<tr>
+							<td>Branch office</td>
+							<td><span id="bOfficeRes"></span></td>
+							<td>Rentacar</td>
+							<td><p class="service" id="rentRes"></p></td>
+							<td id="rentacarRating"></td>
+							<td>Producer</td>
+							<td><span id="prodCarRes"></span></td>
+						</tr>
+						<tr>
+							<td>Model</td>
+							<td><span id="modelCarRes"></span></td>
+						</tr>
+						<tr>
+							<td>Price</td>
+							<td><input type="number" class="form-control" id="carPriceRes" readonly></td>
+							<td><input type="hidden" class="form-control" id="carResID"></td>
+							<td id="vehicleRating"></td>
+							<td colspan='2'><button id="cancelCarReservationButton"
+									class="btn btn-default">Cancel</button></td>
+						</tr>
+					</table>
+					<br> <br>
+					<div id="cartDiv" hidden>
+						<table id="discountTable">
+							<tr>
+								<td><label for="usedDiscountPoints">Used points:</label></td>
+								<td><input type="number" class="form-control" id="usedDiscountPoints" step="1"
+									min="0" value="0"
+									oninput="validity.valid||(value='0');recalculatePrices();"></td>
+								<td><label for="discountPercentagePerPoint">Discount
+										percentage per discount point:</label></td>
+								<td><input type="number" class="form-control" id="discountPercentagePerPoint"
+									readonly></td>
+							</tr>
+							<tr>
+								<td><label for="availableDiscountPoints">Available
+										discount points:</label></td>
+								<td><input type="number" class="form-control" id="availableDiscountPoints"
+									readonly></td>
+								<td><label for="discountPerExtraReservation">Discount
+										per extra reservation:</label></td>
+								<td><input type="number" class="form-control" id="discountPerExtraReservation"
+									readonly></td>
+							</tr>
+							<tr>
+								<td colspan="2"><label for="totalPrice">Total
+										price:</label></td>
+								<td colspan="2"><input type="number" class="form-control" id="totalPrice"
+									readonly></td>
+							</tr>
+						</table>
+						<button onclick="confirmReservation()" class="btn btn-default"
+							id="confirmReservationButton">Confirm Reservation</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

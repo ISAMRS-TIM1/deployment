@@ -1,0 +1,18 @@
+body {
+	background: #f4f7f6;
+}
+
+#content {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top:15%;
+	width: 40%;
+  	font-size: 1.6vw;
+  	padding: 1.6vw;
+  	text-align: center;
+}
+
+#logButton{
+  	width: 50%;
+  	font-size: 1.5vw;
+}

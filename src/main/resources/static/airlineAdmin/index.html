@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Airline Admin</title>
+<link rel="shortcut icon" type="image/png" href="common/images/favicon.png" />
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css"
+	rel="stylesheet" type="text/css">
+<script src="common/js/jquery.seat-charts.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="common/css/jquery.seat-charts.css">
+<link rel="stylesheet" type="text/css"
+	href="common/css/button.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.0"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+	crossorigin=""></script>
+
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+
+<script src="auth/auth.js"></script>
+<script src="airlineAdmin/index.js"></script>
+<link rel="stylesheet" href="airlineAdmin/index.css">
+<link rel="stylesheet" href="common/css/tableStyle.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<div id="topMenu">
+			<div id="tabsDiv">
+				<ul class="nav nav-tabs nav-justified">
+					<li class="active"><a data-toggle="tab" href="#basicTab">Basic
+							info</a></li>
+					<li><a data-toggle="tab" href="#reportsTab">Reports</a></li>
+					<li><a data-toggle="tab" href="#destinationsTab">Destinations</a>
+					</li>
+					<li><a data-toggle="tab" href="#flightsTab">Flights</a></li>
+					<li><a data-toggle="tab" href="#quickResevationsTab">Quick
+							reservations</a></li>
+					<li><a data-toggle="tab" href="#profile">Profile</a></li>
+					<li><a data-toggle="tab" id="logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+			<div id="basicTab" class="tab-pane fade in active">
+				<div id="basicInfo">
+					<input type="text" id="airlineName" class="textInput"/>
+					<div id="airlineGrade"></div><br><br>
+					<div id="descriptionDiv"><textarea id="airlineDescription"
+							class="textInput"></textarea></div>
+				</div>
+				<div id="basicMapDiv" class="map leaflet-container"></div>
+				<input type="hidden" id="basicMapDivLatitude" value="45" required> <input
+					type="hidden" id="basicMapDivLongitude" value="0" required>
+				<button type="button" id="saveChangesBasic" class="btn btn-default" onclick='editAirline(event)'>Save
+					changes</button>
+			</div>
+			<div id="destinationsTab" class="tab-pane fade in">
+				<div class="tableWrapper">
+					<div class="tableButtons">
+						<button type="button" id="addDestinationButton"
+							class="btn btn-default" data-toggle="modal"
+							data-target="#destinationModalDialog">Add destination</button>
+					</div>
+					<div class="tableDiv">
+						<table id="destinationsTable" class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Name</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="reportsTab" class="tab-pane fade">
+				<div class="reportsDiv">
+					<table id="serviceTable">
+						<tr>
+							<td id="shownIncomePeriodText">Period:</td>
+							<td><input type="text" class="form-control" id="showIncomeDateRange"></td>
+						</tr>
+					</table><br>
+					<button class="btn btn-default" id="showIncomeButton" onclick='showIncome(event)'>Show income</button>	
+					<br>
+					<span id="income"></span><br><br>
+					<select id="graphicLevel" class="form-control">
+						<option value="daily">Daily</option>
+						<option value="weekly">Weekly</option>
+						<option value="monthly">Monthly</option>
+					</select><br><br>
+					<div id="chartDiv">
+						<canvas id="chart"></canvas>
+					</div>
+				</div>
+			</div>
+			<div id="flightsTab" class="tab-pane fade">
+				<div class="tableDiv">
+					<table id="flightsTable" class="table display table-bordered">
+						<thead>
+							<tr>
+								<th>Flight code</th>
+								<th>Start destination</th>
+								<th>End destination</th>
+								<th>Departure time</th>
+								<th>Landing time</th>
+								<th>Round trip</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<button class="btn btn-default"
+									id="addFlightButton" data-toggle="modal"
+							data-target="#flightModalDialog">Add flight</button>
+				</div>
+			</div>
+			<div id="quickResevationsTab" class="tab-pane fade">
+				<div class="tableWrapper">
+					<div class="tableButtons">
+						<button type="button" id="addQuickReservationButton"
+							class="btn btn-default" data-toggle="modal"
+							data-target="#addQuickReservationModal">Add quick
+							reservation</button>
+					</div>
+					<div class="tableDiv">
+						<table id="quickReservationsTable"
+							class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Flight code</th>
+									<th>Seat</th>
+									<th>Seat class</th>
+									<th>Discount</th>
+									<th>Real price</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="profile" class="tab-pane fade">
+				<div id="profileContent">
+					<div id="userImgDiv">
+						<img src="common/images/user.png" id="userImg">
+					</div>
+					<div id="profileEdit">
+						<h2 id='email'></h2>
+						<form id="userEditForm">
+							<div class="form-group">
+								<label for="fname">First name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="fname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="lname">Last name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="lname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="phone">Phone:</label>
+								<div class="input-group">
+									<input class="form-control" type="tel" name="phone"
+										pattern="\+[0-9]{12}" title="12 digits starting with +">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="address">Address:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="address"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<button type="button" class="btn btn-default"
+								id="changePasswordButton">Change password</button>
+							<br>
+							<button type="submit" class="btn btn-default" id="saveChanges">Save
+								changes</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- MODAL -->
+	<div class="modal fade" id="flightModalDialog" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="flightServiceDiv">
+				<table id="serviceTable">
+				<tr>
+					<td>
+						Start destination
+					</td>
+					<td>
+						<select class="form-control" id="startDestination">
+						</select>
+					</td>
+					<td>
+						End destination
+					</td>
+					<td>
+						<select class="form-control" id="endDestination">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Departure time
+					</td>
+					<td>
+						<input class="form-control" type="datetime-local" id="departureTime"/>
+					</td>
+					<td>
+						Landing time
+					</td>
+					<td>
+						<input class="form-control" type="datetime-local" id="landingTime"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Flight distance
+					</td>
+					<td>
+						<input class="form-control" type="number" id="flightDistance"/>
+					</td>
+					<td>
+						Price per bag
+					</td>
+					<td>
+						<input class="form-control" type="number" id="pricePerBag"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Connection destinations
+					</td>
+					<td>
+						<select class="form-control" multiple id="connections"></select>
+					</td>
+					<td>
+						First class seat price
+					</td>
+					<td>
+						<input class="form-control" type="number" id="firstPrice"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Business class seat price
+					</td>
+					<td>
+						<input class="form-control" type="number" id="businessPrice"/>
+					</td>
+					<td>
+						Economy class seat price
+					</td>
+					<td>
+						<input class="form-control" type="number" id="economyPrice"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Round trip
+					</td>
+					<td>
+						<input type="checkbox" id="roundTrip"/>
+					</td>
+					<td class="retTrip">
+						Returning departure time
+					</td>
+					<td class="retTrip">
+						<input class="form-control" type="datetime-local" id="retDepartureTime"/>
+					</td>
+				</tr>
+				<tr class="retTrip">
+					<td>
+						Returning landing time
+					</td>
+					<td>
+						<input class="form-control" type="datetime-local" id="retLandingTime"/>
+					</td>
+				</tr>
+				</table><br><br>
+				<div id="planeSeatsTable">
+					<div class="seat-map">
+						<div class="front-indicator">Front</div>
+					</div>
+					<div class="booking-details">
+						<h2>Configure seats</h2>
+						<h3>First class</h3>
+						<input class="form-control" type="number" id="first">
+						<div id="seatButtons">
+							<button class="btn btn-default configure-button" id="addButton"
+								onclick="add(event, 1)">Add</button>
+							<button class="btn btn-default configure-button"
+								id="deleteButton" onclick="deleteSeats(event, 1)">Delete</button>
+						</div>
+						<br>
+						<h3>Business class</h3>
+						<input class="form-control" type="number" id="business">
+						<div id="seatButtons">
+							<button class="btn btn-default configure-button" id="addButton"
+								onclick="add(event, 2)">Add</button>
+							<button class="btn btn-default configure-button"
+								id="deleteButton" onclick="deleteSeats(event, 2)">Delete</button>
+						</div>
+						<br>
+						<h3>Economy class</h3>
+						<input class="form-control" type="number" id="economy">
+						<div id="seatButtons">
+							<button class="btn btn-default configure-button" id="addButton"
+								onclick="add(event, 3)">Add</button>
+							<button class="btn btn-default configure-button"
+								id="deleteButton" onclick="deleteSeats(event, 3)">Delete</button>
+						</div>
+						<div id="seatDiv">
+							<button class="btn btn-default configure-button" id="addButton"
+								onclick="addSeatsIndividually(event)">Add seat</button>
+							<button class="btn btn-default configure-button"
+								id="deleteButton" onclick="deleteSeatsIndividually(event)">Delete
+								seat</button>
+						</div>
+						<div id="legend"></div>
+						<button id="saveSeatButton"
+							class="btn btn-default configure-button"
+							onclick="addFlight(event)">Add flight</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="destinationModalDialog" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content destModal" id="serviceDiv">
+				<div id="destDiv">
+					Name of destination <input class="form-control" type="text" id="destinationName"/><br><br>
+					<div id="destMapDiv" class="map leaflet-container"></div><br>
+					<input type="hidden" id="destMapDivLatitude" value="45" required> <input
+						type="hidden" id="destMapDivLongitude" value="0" required>
+					<button type="button" id="modalDestButton" class="btn btn-default" onclick="addDestination(event)">Save
+						changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- QUICK RESERVATION MODAL -->
+	<div class="modal fade" id="addQuickReservationModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="showFlightDiv">
+				<div id="resTableDiv">
+					<table id="flightsResTable" class="table display table-bordered">
+						<thead>
+							<tr>
+								<th>Flight code</th>
+								<th>Start destination</th>
+								<th>End destination</th>
+								<th>Departure time</th>
+								<th>Landing time</th>
+								<th>Round trip</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<div id="quickReserveDiv">
+					<table id="showFlightTable">
+						<tr>
+							<td>Start destination</td>
+							<td><span id="startDest"></span></td>
+							<td>End destination</td>
+							<td><span id="endDest"></span></td>
+						</tr>
+						<tr>
+							<td>Departure time</td>
+							<td><span id="depTime"></span></td>
+							<td>Landing time</td>
+							<td><span id="landTime"></span></td>
+						</tr>
+						<tr>
+							<td>Airline</td>
+							<td><span id="flightAirline"></span></td>
+							<td>Flight duration</td>
+							<td><span id="flightDuration"></span></td>
+						</tr>
+						<tr>
+							<td>Flight distance</td>
+							<td><span id="flightResDistance"></span></td>
+							<td>Locations of connections</td>
+							<td><select id="flightResConnections"></select>
+						</tr>
+						<tr>
+							<td>Price per bag</td>
+							<td><span id="resPricePerBag"></span></td>
+							<td>Average grade</td>
+							<td><span id="resAverageGrade"></span>
+						</tr>
+						<tr>
+							<td>
+								<span>Discount:</span>
+							</td>
+							<td>
+								<input type="number" class="form-control" id="discount" value="0" min="0" max="80">
+							</td>
+						</tr>
+					</table>
+					<br> <br>
+					<div id="planeSeatsTable">
+						<div id="seat-map-second">
+							<div class="front-indicator">Front</div>
+						</div>
+						<div class="booking-details">
+							<div id="legend-second"></div>
+						</div>
+						<button class="btn btn-default" id="quickReserveButton"
+						onclick="createQuickReservation(event)">Create</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+body {
+	background: #f4f7f6;
+}
+
+/* MENU */
+#topMenu {
+	display: flex;
+}
+
+#tabsDiv {
+	width: 90%;
+	margin-top: 1%;
+	margin-left: 5%;
+}
+
+a[data-toggle="tab"] {
+	background: #f4f7f6;
+	font-size: 1.3vw;
+	color: black;
+}
+
+/* BASIC INFO */
+#basicInfo {
+	text-align: center;
+	padding-bottom: 3vw;
+	width: 50%;
+	margin-left: 25%;
+}
+
+#hotelName {
+	background-color: #f4f7f6;
+	color: black;
+	text-align: center;
+	font-size: 4.5vw;
+	width: 100%;
+}
+
+.textInput {
+	border: none;
+	resize: none;
+}
+
+.textInput:focus {
+	border: 1px solid black;
+	resize: none;
+}
+
+#averageGrade {
+	color: black;
+	font-size: 1.5vw;
+}
+
+#descriptionDiv {
+	width: 100%;
+	height: 75%;
+	text-align: center;
+}
+
+#hotelDescription {
+	background-color: #f4f7f6;
+	color: black;
+	font-size: 1.5vw;
+	width: 100%;
+}
+
+.map {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 65vw;
+	height: 30vw;
+	border-radius: 2vw 2vw 2vw 2vw;
+}
+
+#saveChangesBasic {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 1%;
+	margin-bottom: 2vw;
+}
+
+/* MODAL */
+.modal-content {
+	max-height: calc(100vh - 200px);
+	overflow-y: auto;
+}
+
+/* PROFILE */
+#profileContent {
+	width: 86%;
+	margin-left: 5%;
+	display: flex;
+	margin-top: 10%;
+}
+
+#userImgDiv {
+	width: 40%;
+	height: 50%;
+}
+
+#userImg {
+	width: 50%;
+	margin-left: 15%;
+	margin-top: 2%;
+}
+
+#profileEdit {
+	width: 50%;
+	margin-top: -6%;
+}
+
+.myButton {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	background: #f4f7f6;
+	color: black;
+	font-size: 1.6vw;
+}
+
+#quickDiscount {
+	width: 10vw !important;
+}
+
+#userEditForm input {
+	width: 40vw !important;
+}
+
+#email {
+	text-align: center;
+}
+
+.dialogStyle {
+	background: #f4f7f6;
+	text-align: center;
+}
+
+#airlineName {
+	background-color: #f4f7f6;
+}
+
+#airlineDescription {
+	background-color: #f4f7f6;
+}
+
+.textInput {
+	border: none;
+	resize: none;
+}
+
+.textInput:focus {
+	border: 1px solid black;
+	resize: none;
+}
+
+/* REPORTS */
+.reportsDiv {
+	width: 70vw;
+	min-height: 90vh;
+	margin-top: 5%;
+	margin-bottom: 3%;
+	margin-left: auto;
+	margin-right: auto;
+	background: #f4f7f6;
+	display: block;
+	padding: 2vw;
+	text-align: center;
+}
+
+#income {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.6vw;
+}
+
+#reportsTable {
+	margin: auto
+}
+
+#reportsTable td {
+	padding: 2vw;
+	text-align: center;
+}
+
+#shownIncomePeriodText {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.6vw;
+}
+
+#chartDiv {
+	background: white;
+	position: relative;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	height: 50vh;
+	width: auto;
+}
+
+#graphicLevel {
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* TABLES */
+.tableDiv {
+	width: 70vw;
+	min-height: 30vh;
+	margin-top: 5%;
+	margin-bottom: 3%;
+	margin-left: auto;
+	margin-right: auto;
+	background: #f4f7f6;
+	display: block;
+	padding: 2vw;
+	text-align: center;
+}
+
+.tableButtons {
+	padding: 2vw;
+	text-align: center;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+
+/* HOTEL ROOM MODAL */
+#showHotelRoomDiv {
+	background: #f4f7f6;
+}
+
+.showHotelRoomInnerDiv {
+	margin: 2vw;
+	padding: 2vw;
+}
+
+.showHotelRoomTable {
+	margin: auto;
+}
+
+.showHotelRoomTable td {
+	padding: 0.5vw;
+	text-align: center;
+}
+
+#addSeasonalPriceButton {
+	margin: auto;
+}
+
+/* NEW ROOM MODAL */
+#newHotelRoomDiv {
+	margin: 0;
+	background: #f4f7f6;
+}
+
+#newHotelRoomTable {
+	margin: auto;
+}
+
+#newHotelRoomTable td {
+	padding: 30px;
+	text-align: center;
+}
+
+#addHotelRoomButton {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2vh;
+}
+
+/* NEW ADDITIONAL SERVICE MODAL */
+#newAdditionalServiceDiv {
+	margin: 0;
+	background: #f4f7f6;
+}
+
+#newAdditionalServiceTable {
+	margin: auto;
+}
+
+#newAdditionalServiceTable td {
+	padding: 30px;
+	text-align: center;
+}
+
+#addAdditionalServiceButton {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 2vh;
+}
+
+/* SHOWN ADDITIONAL SERVICE MODAL */
+#shownAdditionalServiceDiv {
+	margin: 0;
+	background: #f4f7f6;
+}
+
+#shownAdditionalServiceTable {
+	margin: auto;
+}
+
+#shownAdditionalServiceTable td {
+	padding: 30px;
+	text-align: center;
+}
+
+/* QUICK RESERVATIONS */
+#createQuickReservationlDiv {
+	margin: 0;
+	background: #f4f7f6;
+}
+
+#createQuickReservationTable td {
+	padding: 30px;
+	text-align: center;
+}
+
+#createQuickReservationTable {
+	margin: auto;
+}
+
+.reservedAdditionalService td {
+	background-color: #00ff00 !important;
+}
+
+/* BIG MODAL */
+@media ( min-width : 768px) {
+	.modal-xl {
+		width: 90%;
+		max-width: 1200px;
+	}
+}
+
+.star-ratings-sprite {
+	background:
+		url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png")
+		repeat-x;
+	/*font-size: 0;*/
+	height: 21px;
+	line-height: 0;
+	overflow: hidden;
+	text-indent: -110em;
+	width: 110px;
+	margin: 0 auto;
+}
+
+.star-ratings-sprite-rating {
+	background:
+		url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png")
+		repeat-x;
+	background-position: 0 100%;
+	float: left;
+	height: 21px;
+	display: block;
+}

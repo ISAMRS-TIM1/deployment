@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotel Admin</title>
+<link rel="shortcut icon" type="image/png"
+	href="login/common/images/favicon.png" />
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css"
+	rel="stylesheet" type="text/css">
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link rel="stylesheet"
+	href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+	integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+	crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+	integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+	crossorigin=""></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.0"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css" />
+
+<script src="auth/auth.js"></script>
+<script src="hotelAdmin/index.js"></script>
+<link rel="stylesheet" href="hotelAdmin/index.css">
+<link rel="stylesheet" href="common/css/tableStyle.css">
+<link rel="stylesheet" type="text/css" href="common/css/button.css">
+</head>
+<body>
+	<div class="container-fluid">
+		<div id="topMenu">
+			<div id="tabsDiv">
+				<ul class="nav nav-tabs nav-justified">
+					<li class="active"><a data-toggle="tab" href="#basicTab">Basic
+							info</a></li>
+					<li><a data-toggle="tab" href="#reportsTab">Reports</a></li>
+					<li><a data-toggle="tab" href="#roomsTab">Rooms</a></li>
+					<li><a data-toggle="tab" href="#additionalServicesTab">Additional
+							services</a></li>
+					<li><a data-toggle="tab" href="#quickResevationsTab">Quick
+							reservations</a></li>
+					<li><a data-toggle="tab" href="#profile">Profile</a></li>
+					<li><a data-toggle="tab" id="logout">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+			<div id="basicTab" class="tab-pane fade in active">
+				<form id="editHotelForm">
+					<div id="basicInfo">
+						<input type="text" id="hotelName" class="textInput" required>
+						<div id="averageGrade"></div>
+						<br>
+						<br>
+						<div id="descriptionDiv">
+							<textarea id="hotelDescription" class="textInput form-control" required></textarea>
+						</div>
+					</div>
+					<div id="basicMapDiv" class="map leaflet-container"></div>
+					<input type="hidden" id="latitude" value="45" required> <input
+						type="hidden" id="longitude" value="0" required>
+					<button type="submit" id="saveChangesBasic" class="btn btn-default myButton">Save
+						changes</button>
+				</form>
+			</div>
+			<div id="reportsTab" class="tab-pane fade">
+				<div class="reportsDiv">
+					<table id=reportsTable>
+						<tr>
+							<td id="shownIncomePeriodText">Period:</td>
+							<td><input type="text" class="form-control" id="showIncomeDateRange"></td>
+						</tr>
+					</table>
+					<br>
+					<button class="btn btn-default myButton" id="showIncomeButton"
+						onclick='showIncome(event)'>Show income</button>
+					<br> <span id="income"></span> <br> <br> <select
+						class="form-control" id="graphicLevel"
+						onchange="changeGraphic(this.value)">
+						<option value="daily">Daily</option>
+						<option value="weekly">Weekly</option>
+						<option value="monthly">Monthly</option>
+					</select><br> <br>
+					<div id="chartDiv">
+						<canvas id="chart"></canvas>
+					</div>
+				</div>
+			</div>
+			<div id="roomsTab" class="tab-pane fade in">
+				<div class="tableWrapper">
+					<div class="tableButtons">
+						<button type="button" id="addRoomButton" class="btn btn-default myButton"
+							data-toggle="modal" data-target="#newHotelRoomModal">Add
+							room</button>
+					</div>
+					<div class="tableDiv">
+						<table id="roomsTable" class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Room</th>
+									<th>Current price</th>
+									<th>For people</th>
+									<th>Average grade</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="additionalServicesTab" class="tab-pane fade">
+				<div class="tableWrapper">
+					<div class="tableButtons">
+						<button type="button" id="addAdditionalServiceButton"
+							class="btn btn-default myButton" data-toggle="modal"
+							data-target="#newAdditionalServiceModal">Add additional
+							service</button>
+					</div>
+					<div class="tableDiv">
+						<table id="additionalServicesTable"
+							class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Additional service</th>
+									<th>Price</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="quickResevationsTab" class="tab-pane fade">
+				<div class="tableWrapper">
+					<div class="tableButtons">
+						<button type="button" id="createQuickReservationButton"
+							class="btn btn-default myButton" data-toggle="modal"
+							data-target="#createQuickReservationModal">Create quick
+							reservation</button>
+					</div>
+					<div class="tableDiv">
+						<table id="quickReservationsTable"
+							class="table display table-bordered">
+							<thead>
+								<tr>
+									<th>Reservation ID</th>
+									<th>Discounted price</th>
+									<th>Discount</th>
+									<th>From</th>
+									<th>To</th>
+									<th>Room</th>
+									<th>Additional services</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div id="profile" class="tab-pane fade">
+				<div id="profileContent">
+					<div id="userImgDiv">
+						<img src="common/images/user.png" id="userImg">
+					</div>
+					<div id="profileEdit">
+						<h2 id='email'></h2>
+						<form id="userEditForm">
+							<div class="form-group">
+								<label for="fname">First name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="fname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="lname">Last name:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="lname"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="phone">Phone:</label>
+								<div class="input-group">
+									<input class="form-control" type="tel" name="phone"
+										pattern="\+[0-9]{12}" title="12 digits starting with +">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="address">Address:</label>
+								<div class="input-group">
+									<input class="form-control" type="text" name="address"
+										pattern="[A-Z][a-z]*" title="Must start with a capital letter">
+								</div>
+							</div>
+							<button type="button" class="btn btn-default myButton"
+								id="changePasswordButton">Change password</button>
+							<br>
+							<button type="submit" class="btn btn-default myButton" id="saveChanges">Save
+								changes</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Show hotel room modal -->
+	<div class="modal fade" id="showHotelRoomModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" id="showHotelRoomDiv">
+				<div class="showHotelRoomInnerDiv">
+					<form id="shownHotelRoomForm">
+						<table class="showHotelRoomTable">
+							<tr>
+								<td><label for="shownRoomNumber">Room number</label></td>
+								<td><input id="shownRoomNumber" class="form-control"
+									required></td>
+							</tr>
+							<tr>
+								<td><label for="shownRoomDefaultPrice">Default
+										price per night</label></td>
+								<td><input type="number" id="shownRoomDefaultPrice"
+									class="form-control" step='0.01' required></td>
+							</tr>
+							<tr>
+								<td><label for="shownRoomNumberOfPeople">Number of
+										people</label></td>
+								<td><input type="number" id="shownRoomNumberOfPeople"
+									class="form-control" required></td>
+							</tr>
+							<tr>
+								<td><label for="shownRoomAverageGrade">AverageGrade</label></td>
+								<td><span id="shownRoomAverageGrade" class="form-control"
+									></span></td>
+							</tr>
+							<tr>
+								<td><button type="submit" id="editHotelRoomButton"
+										class="btn btn-default myButton">Save changes</button></td>
+								<td><button type="button" id="deleteHotelRoomButton"
+										onclick="deleteRoom()" class="btn btn-default myButton">Delete
+										room</button></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div class="showHotelRoomInnerDiv">
+					<form id="newSeasonalPriceForm">
+						<table class="showHotelRoomTable">
+							<tr>
+								<td><label for="newSeasonalPriceDateRange">Date</label></td>
+								<td><input type="text" class="form-control" id="newSeasonalPriceDateRange" /></td>
+								<td><label for="newSeasonalPricePrice">Price</label></td>
+								<td><input id="newSeasonalPricePrice" class="form-control" type="number"
+									step="0.01" oninput="validity.valid||(value='');" required></td>
+							</tr>
+							<tr>
+								<td colspan="4"><button type="submit"
+										id="addSeasonalPriceButton" class="btn btn-default myButton">Add
+										seasonal price</button></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<div class="showHotelRoomInnerDiv">
+					<table id="seasonalPricesTable"
+						class="table display table-bordered">
+						<caption>Seasonal prices</caption>
+						<thead>
+							<tr>
+								<th>Price</th>
+								<th>From date</th>
+								<th>To date</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Add new hotel room modal -->
+	<div class="modal fade" id="newHotelRoomModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" id="newHotelRoomDiv">
+				<form id="newHotelRoomForm">
+					<table id="newHotelRoomTable">
+						<tr>
+							<td><label for="newRoomNumber">Room number</label></td>
+							<td><input id="newRoomNumber" class="form-control" required></td>
+						</tr>
+						<tr>
+							<td><label for="newRoomDefaultPrice">Default price
+									per night</label></td>
+							<td><input type="number" id="newRoomDefaultPrice"
+								class="form-control" step='0.01' required></td>
+						</tr>
+						<tr>
+							<td><label for="newRoomNumberOfPeople">Number of
+									people</label></td>
+							<td><input type="number" id="newRoomNumberOfPeople"
+								class="form-control" required></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button type="submit" id="addHotelRoomButton"
+									class="btn btn-default myButton">Add</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Show additional service modal -->
+	<div class="modal fade" id="shownAdditionalServiceModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" id="shownAdditionalServiceDiv">
+				<form id="shownAdditionalServiceForm">
+					<table id="newAdditionalServiceTable">
+						<tr>
+							<td><label for="shownAdditionalServiceName">Name</label></td>
+							<td><input id="shownAdditionalServiceName"
+								class="form-control" required></td>
+						</tr>
+						<tr>
+							<td><label for="shownAdditionalServicePrice">Price</label></td>
+							<td><input type="number" id="shownAdditionalServicePrice"
+								class="form-control" step='0.01' required></td>
+						</tr>
+						<tr>
+							<td><button type="submit" id="editAdditionalServiceButton"
+									class="btn btn-default myButton">Save changes</button></td>
+							<td><button type="button" id="deleteAdditionalServiceButton"
+									onclick="deleteAdditionalService()" class="btn btn-default myButton">Delete
+									service</button></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Add new additional service modal -->
+	<div class="modal fade" id="newAdditionalServiceModal" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" id="newAdditionalServiceDiv">
+				<form id="newAdditionalServiceForm">
+					<table id="newAdditionalServiceTable">
+						<tr>
+							<td><label for="newAdditionalServiceName">Name</label></td>
+							<td><input id="newAdditionalServiceName"
+								class="form-control" required></td>
+						</tr>
+						<tr>
+							<td><label for="newAdditionalServicePrice">Price</label></td>
+							<td><input type="number" id="newAdditionalServicePrice"
+								class="form-control" step='0.01' required></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<button type="submit" id="addAdditionalServiceButton"
+									class="btn btn-default myButton">Add</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Create quick reservation modal -->
+	<div class="modal fade" id="createQuickReservationModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content" id="createQuickReservationlDiv">
+				<table id="createQuickReservationTable">
+					<tr>
+						<td><label for="quickDiscount">Discount (%)</label></td>
+						<td><input id="quickDiscount" class="form-control" type="number" min="0" max ="80"
+										oninput="validity.valid||(value='');" value="0"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><table id="quickAdditionalServicesTable"
+								class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Additional service</th>
+										<th>Price</th>
+										<th>Add to reservation</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="hotelRoomsSearchTable">
+								<tr>
+									<td>Reservation date</td>
+									<td><input type="text" class="form-control" id="searchRoomsDateRange" /></td>
+									<td>For people</td>
+									<td><input id="searchRoomsForPeople" class="form-control" type="number" min="1"
+										oninput="validity.valid||(value='');" value="1"></td>
+								</tr>
+								<tr>
+									<td>Price</td>
+									<td><input id="searchRoomsPrice" class="form-control" type="text" class="span2"
+										value="" data-slider-min="0" data-slider-max="10000"
+										data-slider-step="10" data-slider-value="[0,10000]" /></td>
+									<td>Grade</td>
+									<td><input id="searchRoomsGrade" class="form-control" type="text" class="span2"
+										value="" data-slider-min="0" data-slider-max="5"
+										data-slider-step="0.1" data-slider-value="[0,5]" /></td>
+								</tr>
+							</table> <br>
+							<button class="btn btn-default" id="searchRoomsButton"
+								onclick="searchRooms(event)">Search</button> <br>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<table id="quickRoomsTable" class="table display table-bordered">
+								<thead>
+									<tr>
+										<th>Room</th>
+										<th>Current price</th>
+										<th>For people</th>
+										<th>Average grade</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

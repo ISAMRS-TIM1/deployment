@@ -1,0 +1,23 @@
+body {
+	background: #f4f7f6;
+}
+
+#formDiv {
+	margin-left:auto;
+	margin-right:auto;
+	margin-top: 15%;
+  	display:block;
+	width: 40%;
+  	font-size: 1.6vw;
+}
+
+form {
+	padding: 2.8vw;
+	padding-bottom: 1.6vw;
+	text-align:center;
+}
+
+#regButton {
+	font-size: 1.4vw;
+	font-style: italic;
+}
