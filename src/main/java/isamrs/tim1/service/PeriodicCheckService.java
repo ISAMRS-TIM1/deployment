@@ -223,7 +223,7 @@ public class PeriodicCheckService {
 			for (Vehicle v : rac.getVehicles()) {
 				vehicleReservations = v.getReservations();
 				for (VehicleReservation vr : vehicleReservations) {
-					if (vr.getDone() == true)
+					if (vr.getDone() == true && vr.getGrade() != null)
 						entitySum += vr.getGrade();
 				}
 
@@ -258,7 +258,7 @@ public class PeriodicCheckService {
 			for (Flight f : air.getFlights()) {
 				flightReservations = f.getReservations();
 				for (FlightReservation fr : flightReservations) {
-					if (fr.getDone() == true)
+					if (fr.getDone() == true && fr.getGrade() != null)
 						entitySum += fr.getGrade();
 				}
 
@@ -293,7 +293,7 @@ public class PeriodicCheckService {
 			for (HotelRoom hr : h.getRooms()) {
 				hotelReservations = hr.getReservations();
 				for (HotelReservation res : hotelReservations) {
-					if (res.getDone() == true)
+					if (res.getDone() == true && res.getGrade() != null)
 						entitySum += res.getGrade();
 				}
 
